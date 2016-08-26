@@ -1,5 +1,5 @@
 /*
- translate -- the translation of the text by means of dictionaries of stardict
+ translate -- the translation of the text in the console by means of dictionaries of stardict. 
  
  Copyright (C) 2016 Naidolinsky Dmitry <naidv88@gmail.com>
 
@@ -20,6 +20,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+const static char copying[]="<translate> Copyright (C) <2016> <Naidolinsy Dmitry>\n"
+    "This program comes with ABSOLUTELY NO WARRANTY.\n"
+		"This is free software, and you are welcome to redistribute it\n"
+		"under certain conditions;\n";
 
 #define COM 1
 #define KREF 2
@@ -30,8 +34,9 @@ char *parserc;
 int main(int argc,const char *argv[])
 {
 	if (argc < 3  ||  argc > 3){
+		printf("%s\n",copying);
 		printf("%s словарь [слово | фраза]\n",argv[0]);
-		return 0;
+		return 1;
 	}
 
 	FILE *dictionary;
