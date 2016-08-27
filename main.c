@@ -360,7 +360,7 @@ int found(const char *fpath, const struct stat *sb,
 				strncpy(name,start,end - start);
 
 				if (strncmp(&fpath[ftwbuf->base],name,end - start)==0)
-					printf("%s\n",fpath);
+					process(fpath);
 				free(name);
 				start = end+1;
 				symbol = 1;
