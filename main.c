@@ -57,7 +57,7 @@ int print_file(const char *file)
 	memset(line,45,ws.ws_col  + 14);
 	ptr = line;
 	ptr += ws.ws_col / 2;
-	char *cfile = calloc(strlen(file) + 14, sizeof(char));
+	char *cfile = calloc(strlen(file) + 18, sizeof(char));
 	ptr = ptr - strlen(file) + (strlen(file) / 2);
 	sprintf(cfile,"\033[1;33m%s\033[1;36m",file);
 	strncpy(ptr,cfile,strlen(cfile));
