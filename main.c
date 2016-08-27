@@ -413,7 +413,7 @@ int main(int argc, char *argv[])
 
 struct configs * getconfig()
 {
-	char *cpath = calloc(strlen(getenv("HOME")) + strlen(".translate.conf"),sizeof(char));
+	char *cpath = calloc(strlen(getenv("HOME")) + strlen(".translate.conf") + 1,sizeof(char));
 	sprintf(cpath,"%s/.translate.conf",getenv("HOME"));
 
 	struct configs *cf = calloc(1,sizeof(struct configs));
