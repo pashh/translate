@@ -54,7 +54,7 @@ int print_file(const char *file)
 	ioctl(0,TIOCGWINSZ, &ws);
 	char *ptr;
 	char *line = calloc(ws.ws_col + 14,sizeof(char));
-	memset(line,45,ws.ws_col  + 14);
+	memset(line,45,ws.ws_col + 14 );
 	ptr = line;
 	ptr += ws.ws_col / 2;
 	char *cfile = calloc(strlen(file) + 18, sizeof(char));
@@ -100,6 +100,11 @@ int process(const char *file)
 		if (found == 1){
 			tran = ptr;
 			if (ptr = strstr(line,"<k>")){
+				if (ptr = strstr(line,"<abr>")){
+					no++;
+					more = 1;
+					goto abr;
+				}
 				if (ptr = strstr(line,"<dtrn>")){
 					no++;
 					more = 1;
@@ -123,6 +128,22 @@ end:
 				fclose(dictionary);
 				return 0;
 			}
+			
+				if (ptr = strstr(line,"<tr>")){
+					no++;
+					tran = ptr;
+					parser(tran,0);
+					continue;
+				}
+				
+				if (ptr = strstr(line,"<abr>")){
+abr:
+					no++;
+					tran = ptr;
+					parser(tran,0);
+					continue;
+				}
+
 				if (ptr = strstr(line,"<dtrn>")){
 					no++;
 in:
@@ -239,7 +260,7 @@ void parser(char *current, int com)
 			colors[color]=4;
 			color++;
 			current += 4;
-			printf("\033[0;33m");
+			printf("\033[0;35m");
 			goto skip;
 		}
 
@@ -263,6 +284,12 @@ void parser(char *current, int com)
 				printf("\"");
 				goto skip;
 			}
+			if(strncmp(current,"&apos;",6)==0){
+				current += 5;
+				printf("\'");
+				goto skip;
+			}
+		
 			if(*current != '\n'){
 
 				if(check!=color)
