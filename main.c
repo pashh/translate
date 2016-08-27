@@ -124,7 +124,6 @@ int process(const char *file)
 					more = 1;
 					goto kref;
 				}
-				*ptr = '\0';
 end:
 				if (more)
 					more = 0;
