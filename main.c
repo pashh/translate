@@ -48,7 +48,7 @@ char *parserc;
 char *word;
 
 int nfile = 0;
-int print_file(char *file)
+int print_file(const char *file)
 {
 	struct winsize ws;
 	ioctl(0,TIOCGWINSZ, &ws);
@@ -64,7 +64,7 @@ int print_file(char *file)
 	printf("\033[1;36m%s\033[0m\n",line);
 
 }
-int process(char *file)
+int process(const char *file)
 {
 
 	FILE *dictionary;
