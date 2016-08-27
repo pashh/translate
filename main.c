@@ -100,6 +100,11 @@ int process(const char *file)
 		if (found == 1){
 			tran = ptr;
 			if (ptr = strstr(line,"<k>")){
+				if (ptr = strstr(line,"<b>")){
+					no++;
+					more = 1;
+					goto b;
+				}
 				if (ptr = strstr(line,"<abr>")){
 					no++;
 					more = 1;
@@ -128,6 +133,14 @@ end:
 				fclose(dictionary);
 				return 0;
 			}
+				if (ptr = strstr(line,"<b>")){
+b:
+					no++;
+					tran = ptr;
+					parser(tran,0);
+					continue;
+				}
+
 			
 				if (ptr = strstr(line,"<tr>")){
 					no++;
@@ -269,6 +282,22 @@ void parser(char *current, int com)
 			color--;
 			current += 5;
 			printf("\033[0;37m");
+			goto skip;
+		}
+
+		if(strncmp(current,"<b>",3)==0){
+			inc = 1;
+			color++;
+			current += 2;
+			printf("\033[0;32m");
+			goto skip;
+		}
+
+		if(strncmp(current,"</b>",4)==0){
+			inc = 0;
+			color--;
+			current += 3;
+			printf("\033[0m");
 			goto skip;
 		}
 
