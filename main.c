@@ -26,6 +26,10 @@
 #include <termios.h>
 #include <asm-generic/ioctls.h>
 #include <sys/ioctl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <errno.h>
 
 #define DIR 1
 #define LIST 2
@@ -387,14 +391,23 @@ int main(int argc, char *argv[])
 	char *start = punct;
 	char *currentdir;
 	int symbol = 0;
+	struct stat st;
 	while(*punct != '\0'){
 		punct++;
 		if (symbol == 1)
 			if (!isspace(*punct))
 				start = punct,symbol=0;
+		if (!isascii(*punct))
+			fprintf(stderr, "\033[0;33mнет такого каталога\033[0m \n"),
+			exit(0);
 		if ((*punct == ',') || (*punct == '\0')){
 			currentdir = calloc(punct - start, sizeof(char));
 			strncpy(currentdir,start,punct - start);
+			if (stat(currentdir,&st) == -1){
+				if (errno & ENOENT)
+					fprintf(stderr, "\033[0;33mнет такого каталога\033[0m -> %s\n",currentdir);
+				exit(0);
+			}
 			nftw(currentdir, found,20, 0); 
 
 			if (*punct == '\0')
@@ -409,11 +422,12 @@ int main(int argc, char *argv[])
 	}
 	return 0;
 }
-
+char *getcpath();
 struct configs * getconfig()
 {
-	char *cpath = calloc(strlen(getenv("HOME")) + strlen(".translate.conf") + 1,sizeof(char));
-	sprintf(cpath,"%s/.translate.conf",getenv("HOME"));
+	char *cpath;
+	if ((cpath = getcpath()) == NULL)
+		exit(0);
 
 	struct configs *cf = calloc(1,sizeof(struct configs));
 	FILE *conf;
@@ -485,4 +499,44 @@ struct configs * getconfig()
 					/* все перечисленные файлы */
 				}
 	return cf;
+}
+
+char *getcpath()
+{
+	int len = 0;
+	char *string = getenv("XDG_HOME_CONFIG");
+	if (!string)
+		string = calloc(strlen(getenv("HOME")) + strlen("/.config/translate/translate.conf"), 1),
+					 sprintf(string,"%s/.config/translate/translate.conf",getenv("HOME"));
+	else
+		string = calloc(strlen(getenv("XDG_HOME_CONFIG")) + strlen("/translate/translate.conf"), 1),
+					 sprintf(string,"%s/translate/translate.conf",getenv("XDG_HOME_CONFIG"));
+	struct stat st;
+	char *dir;
+	dir = &string[0];
+	dir = strstr(dir, "translate");
+	dir = strstr(dir, "/");
+	len = dir - string;
+	char *nmdir = calloc(len,1);
+	strncpy(nmdir,string,len);
+	if (stat(nmdir,&st) == -1){
+		if (errno & ENOENT){
+			mkdir(nmdir,0700);
+		}
+		else{
+			perror("stat");
+			return NULL;
+		}
+	}
+	if (stat(string, &st) == -1){
+		if (errno & ENOENT){
+			FILE *fd;
+			fd = fopen(string,"w");
+			fprintf(fd, "jobdir=\ndicts=\n");
+			fclose(fd);
+			fprintf(stderr,"\033[0;33mнужно заполнить файл настроек\033[0m -> %s\n",string);
+			return NULL;
+		}
+	}
+	return string;
 }
