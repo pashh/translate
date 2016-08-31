@@ -1,14 +1,12 @@
-translate - the translation of the text in the console using dictionaries of stardict
+translate - перевод текста в консоли используя словари stardict
+В домашней директории должен быть файл с настройками .translate.conf
+В этом файле можно указать всего две опции.
 
-In a home directory there shall be a file with the .translate.conf settings
-In this file it is possible to specify only two options.
-
-jobdir = in this option can write directories where there will be dictionaries, it is possible to write several ways of directories through a comma, then search will be run in the listed directories. Search of dictionaries happens the recursive method, then it is possible to store several directories in the directory, without dumping all dictionaries in one directory.
-
-dicts = if this opition is commented out, means will be all dictionaries from the option jobdir will be checked. If the option dicts is included, then only the dictionaries listed in this option will be selected, it is possible to specify a little through a comma. There is an example.
+jobdir = в эту опцию можно записать папки где будет словари, можно записать через запятую несколько путей папок, тогда поиск будет произведён в перечисленных папках. Поиск словарей происходит рекурсивным способом, тогда можно в папке хранить несколько папок, не сваливая все словари в одну папку.
+dicts = если эта опиция закоментирована, значит будут проверятся все словари из опции jobdir. Если опция dicts включена, то будут выбираться только перечисленные в этой опции словари, можно через запятую несколько указать. Вот пример.
 
 jobdir=/home/user/dicts
 dicts=stardict.dict
 
-When settings are complete, it is possible to use translate.
-translate word
+Когда настройки завершены, можно использовать translate.
+translate слово
